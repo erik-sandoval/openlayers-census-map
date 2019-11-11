@@ -27,8 +27,9 @@ for data in census_data:
 
 for data in map_data["features"]:
     if state_data[data["properties"]["NAME"]]:
-        data["properties"]["LANGUAGES"] = state_data[data["properties"]
-                                                     ["NAME"]]['languages']
+        for lang_key, lang_val in state_data[data["properties"]["NAME"]]["languages"].items():
+            data["properties"][lang_key.upper()] = int(lang_val)
+    print('finished')
 
 file = open('/Users/erik/GitHub/arcGIS-Project/src/data/geo_data.json', 'w')
 
