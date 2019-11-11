@@ -10,7 +10,7 @@ sorted_list = {}
 for line in pdf_file:
 
     split_line = line.split()
-    sorted_list[int(split_line[0])] = split_line[1]
+    sorted_list[split_line[0]] = split_line[1]
 
 print(sorted_list)
 
