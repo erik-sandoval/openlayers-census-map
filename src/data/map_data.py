@@ -1,3 +1,7 @@
+# this is the base geoJSON file I had gotten online.
+# I use this to add the languages to my geoJSON file
+# finished data at src/data/geo_data.json
+
 map_data = {
   "type": "FeatureCollection",
   "features": [
