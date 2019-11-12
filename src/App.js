@@ -8,7 +8,7 @@ import { OSM, XYZ, TileArcGISRest } from "ol/source";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { Zoom, MousePosition } from 'ol/control';
+import { Zoom, MousePosition, ZoomSlider, LayerSwitcher } from 'ol/control';
 import { Style, Fill, Stroke } from 'ol/style';
 import { toStringHDMS } from "ol/coordinate";
 import { toLonLat } from "ol/proj";
@@ -18,6 +18,16 @@ import axios from 'axios';
 
 
 function App() {
+
+  const [map, setMap] = useState(null)
+  const layer = { 0: true, 1: true, 2: true, 3: true }
+  // const [uslayer, setUSLayer] = useState(true)
+  // const [stateLayer, setStateLayer] = useState(true)
+  // const [congLayer, setCongLayer] = useState(true)
+  // const [countyLayer, setCountyLayer] = useState(true)
+
+  const key = "f71397456f83bd9ef4afa2721a6cafb4b3e9d010"
+  const baseUrl = "https://api.census.gov/data/2013/language?get=LANLABEL,LAN7,EST"
 
   useEffect(() => {
     const container = document.getElementById("popup");
@@ -45,17 +55,23 @@ function App() {
     const map = new Map({
       target: "map",
       overlays: [overlay],
-      controls: [new Zoom(), new MousePosition()],
+      controls: [new Zoom(), new ZoomSlider()],
       layers: [
         new TileLayer({
-          source: new OSM()
+          source: new OSM(),
         }),
-        // new VectorLayer({
-        //   source: new VectorSource({
-        //     url: "./us_outline.json",
-        //     format: new GeoJSON()
-        //   })
-        // }),
+        new VectorLayer({
+          source: new VectorSource({
+            url: "./us_outline.json",
+            format: new GeoJSON()
+          }),
+          style: new Style({
+            stroke: new Stroke({
+              color: 'red',
+            })
+          }),
+          zIndex: 10
+        }),
         new VectorLayer({
           source: new VectorSource({
             url: "./us_states_outline.json",
@@ -63,7 +79,8 @@ function App() {
           }),
           style: new Style({
             fill: new Fill({
-              color: 'orange'
+              color: 'orange',
+              opacity: .7
             }),
             stroke: new Stroke({
               color: 'white'
@@ -104,38 +121,85 @@ function App() {
 
     map.addInteraction(selectClick)
 
-    selectClick.on('select', function (evt) {
-      console.log(evt)
-      if (evt.selected.length > 0) {
-        if (evt.selected[0].values_.LSAD === "" || evt.selected[0].values_.LSAD === "CD") {
 
-          const state = evt.selected[0].values_.STATE
-          axios.get(`https://api.census.gov/data/2013/language?get=LANLABEL,LAN7,EST&for=state:${state}&key=f71397456f83bd9ef4afa2721a6cafb4b3e9d010`).then(res => {
-            console.log(res.data)
-          })
-        } else if (evt.selected[0].values_.LSAD === "County") {
-          console.log(evt.selected[0].values_)
-          const state = evt.selected[0].values_.STATE
-          const county = evt.selected[0].values_.COUNTY
 
-          axios.get(`https://api.census.gov/data/2013/language?get=LANLABEL,LAN7,EST&for=county:${county}&in=state:${state}&key=f71397456f83bd9ef4afa2721a6cafb4b3e9d010`).then(res => {
-            console.log(res.data)
-          })
-        }
-      }
+    map.on('singleclick', function (evt) {
+      // console.log(evt.coordinate)
+      // console.log(evt.map)
+      // if (evt.selected.length > 0) {
+      //   if (evt.selected[0].values_.LSAD === "" || evt.selected[0].values_.LSAD === "CD") {
+
+      //     const state = evt.selected[0].values_.STATE
+      //     axios.get(`${baseUrl}&for=state:${state}&key=f71397456f83bd9ef4afa2721a6cafb4b3e9d010`).then(res => {
+      //       console.log(res.data)
+      //     })
+      //   } else if (evt.selected[0].values_.LSAD === "County") {
+      //     console.log(evt.selected[0].values_)
+      //     const state = evt.selected[0].values_.STATE
+      //     const county = evt.selected[0].values_.COUNTY
+
+      //     axios.get(`${baseUrl}&for=county:${county}&in=state:${state}&key=f71397456f83bd9ef4afa2721a6cafb4b3e9d010`).then(res => {
+      //       console.log(res.data)
+      //     })
+      //   }
+      // }
 
       // setStateCode(state)
+
     });
 
+    setMap(map)
 
   }, []);
 
+
+  if (map) {
+    console.log(map.getLayers().getArray())
+  }
+
+  // const toggleLayer = (e) => {
+
+  //   const layers = map.getLayers().getArray()
+  //   layers[e.target.value].state_.visible = false
+  //   layers[e.target.value].state_.opacity = 0
+  //   console.log(!layer[e.target.value])
+  //   console.log(layers)
+  // }
+
+  const getCensusData = (evt) => {
+    // if (evt.selected.length > 0) {
+    //   if (evt.selected[0].values_.LSAD === "" || evt.selected[0].values_.LSAD === "CD") {
+
+    //     const state = evt.selected[0].values_.STATE
+    //     axios.get(`${baseUrl}&for=state:${state}&key=${key}`).then(res => {
+    //       console.log(res.data)
+    //     })
+    //   } else if (evt.selected[0].values_.LSAD === "County") {
+    //     console.log(evt.selected[0].values_)
+    //     const state = evt.selected[0].values_.STATE
+    //     const county = evt.selected[0].values_.COUNTY
+
+    //     axios.get(`${baseUrl}&for=county:${county}&in=state:${state}&key=${key}`).then(res => {
+    //       console.log(res.data)
+    //     })
+    //   }
+    // }
+  }
+
   return (
     <div className='App'>
-      <div id='map' ></div>
+      <div id='map' >
+        {/* <div className="ui-menu">
+          <input value="0" type="checkbox" defaultChecked onClick={toggleLayer} />US Outline<br></br>
+          <input value="1" type="checkbox" defaultChecked onClick={toggleLayer} />US States Outline<br></br>
+          <input value="2" type="checkbox" defaultChecked onClick={toggleLayer} />US Congressional Outline<br></br>
+          <input value="3" type="checkbox" defaultChecked onClick={toggleLayer} />US County Outline<br></br>
+        </div> */}
+      </div>
       <div id="popup" className="ol-popup">
         <a href="#" id="popup-closer" className="ol-popup-closer"></a>
         <div id="popup-content"></div>
+
       </div>
     </div>
   );
