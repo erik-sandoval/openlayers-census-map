@@ -8,7 +8,7 @@ import { OSM, XYZ, TileArcGISRest } from "ol/source";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { LZoom, MousePosition } from 'ol/control';
+import { Zoom, MousePosition } from 'ol/control';
 import { Style, Fill, Stroke } from 'ol/style';
 import { toStringHDMS } from "ol/coordinate";
 import { toLonLat } from "ol/proj";
