@@ -208,7 +208,7 @@ function App() {
       <div className="contact-info">
         <div className="inner-box">
           <h3>Erik Sandoval</h3>
-          <a href="https://github.com/erik-sandoval/arcGIS-Project" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i>Github Repo</a>
+          <a href="https://github.com/erik-sandoval/arcgis-census-map" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i>Github Repo</a>
         </div>
       </div>
     </div>
