@@ -187,10 +187,17 @@ function App() {
   const DataLoop = () => {
     return <div>
       <h3>{name}</h3>
-      {data.map((censusData, i) => (
-        <p key={i}>{i !== 0 ? `${censusData[0]} ${censusData[2]}` : null}</p>
+      <table>
+        <tr>
+          <th>Language</th>
+          <th>Estimate</th>
+        </tr>
+        {data.map((censusData, i) => (
 
-      ))}
+          i !== 0 ? <tr><td>{censusData[0]}</td> <td>{censusData[2]}</td></tr> : null
+
+        ))}
+      </table>
     </div>
   }
   return (
