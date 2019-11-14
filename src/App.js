@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.scss";
 import "ol/ol.css";
 import { Map, View, Overlay } from "ol";
@@ -21,15 +21,19 @@ import axios from 'axios';
 
 function App() {
 
-  const [data, setData] = useState(null)
-  const [name, setName] = useState("")
   const key = "f71397456f83bd9ef4afa2721a6cafb4b3e9d010"
   const baseUrl = "https://api.census.gov/data/2013/language?get=LANLABEL,LAN7,EST"
 
+  const [data, setData] = useState(null)
+  const [name, setName] = useState("")
+  const containerRef = useRef()
+  const contentRef = useRef()
+  const closerRef = useRef()
+
   useEffect(() => {
-    const container = document.getElementById("popup");
-    const content = document.getElementById("popup-content");
-    const closer = document.getElementById("popup-closer");
+    const container = containerRef.current
+    const content = contentRef.current
+    const closer = closerRef.current
 
     const selectClick = new Select({
       style: new Style({
@@ -140,17 +144,12 @@ function App() {
       })
     });
 
-    map.onclick = function () {
-      overlay.setPosition(undefined);
-    }
-
     const layerSwitcher = new LayerSwitcher({
       tipLabel: 'legend',
       groupSelectStyle: 'none',
     });
 
     map.addControl(layerSwitcher);
-
     map.addInteraction(selectClick)
 
     selectClick.on('select', function (evt) {
@@ -189,8 +188,8 @@ function App() {
     return <div>
       <h3>{name}</h3>
       {data.map((censusData, i) => (
+        <p key={i}>{i !== 0 ? `${censusData[0]} ${censusData[2]}` : null}</p>
 
-        <p key={i}>{censusData[0]}</p>
       ))}
     </div>
   }
@@ -198,9 +197,9 @@ function App() {
     <div className='App'>
       <div id='map' >
       </div>
-      <div id="popup" className="ol-popup">
-        <a href="#" id="popup-closer" className="ol-popup-closer"></a>
-        <div id="popup-content">{data ? <div><DataLoop /></div> : "Not enough data for this area to display"}</div>
+      <div ref={containerRef} id="popup" className="ol-popup">
+        <a href="#" ref={closerRef} id="popup-closer" className="ol-popup-closer"></a>
+        <div ref={contentRef} id="popup-content">{data ? <div><DataLoop /></div> : "Not enough data for this area to display"}</div>
       </div>
     </div>
   );
