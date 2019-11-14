@@ -205,6 +205,12 @@ function App() {
         <a href="#" ref={closerRef} id="popup-closer" className="ol-popup-closer"></a>
         <div ref={contentRef} id="popup-content">{data ? <div><DataLoop /></div> : "Not enough data for this area to display"}</div>
       </div>
+      <div className="contact-info">
+        <div className="inner-box">
+          <h3>Erik Sandoval</h3>
+          <a href="https://github.com/erik-sandoval/arcGIS-Project" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i>Github Repo</a>
+        </div>
+      </div>
     </div>
   );
 }

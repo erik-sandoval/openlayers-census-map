@@ -68,3 +68,25 @@ table {
     }
   }
 }
+
+.contact-info {
+  height          : 115px;
+  background-color: whitesmoke;
+  z-index         : 9999;
+  position        : fixed;
+  top             : 86%;
+  width           : 150px;
+
+  .inner-box {
+    margin-left: 10px;
+
+    a {
+      text-decoration: none;
+
+      .fab {
+        font-size   : 30px;
+        margin-right: 10px;
+      }
+    }
+  }
+}
