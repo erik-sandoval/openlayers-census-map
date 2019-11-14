@@ -165,7 +165,6 @@ function App() {
         if (lsad === "" || lsad === "CD") {
           const state = feature.array_[0].values_.STATE
           axios.get(`${baseUrl}&for=state:${state}&key=${key}`).then(res => {
-            console.log(res)
             setData(res.data)
           })
         } else if (lsad === "County") {
@@ -180,8 +179,6 @@ function App() {
     })
 
   }, [setData]);
-
-  console.log(data)
 
 
   const DataLoop = () => {
