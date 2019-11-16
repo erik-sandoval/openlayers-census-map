@@ -91,7 +91,6 @@ function App() {
 
     // the select event listens for a feature select
     selectClick.on("select", function(evt) {
-      console.log(evt);
       // I am using the coords to set the position of the overlay
       const pixels = evt.mapBrowserEvent.pixel;
       const coords = map.getCoordinateFromPixel(pixels);
