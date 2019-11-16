@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import "./App.scss";
 // OpenLayers Imports
 import "ol/ol.css";
@@ -106,10 +108,12 @@ function App() {
         if (lsad === "" || lsad === "CD") {
           const state = feature.array_[0].values_.STATE;
           // api call with dynamic state id
-          axios.get(`${baseUrl}&for=state:${state}&key=${key}`).then(res => {
-            // setting response into state to access later on.
-            setData(res.data);
-          });
+          axios
+            .get(`${baseUrl}&for=state:${state}&LAN7&key=${key}`)
+            .then(res => {
+              // setting response into state to access later on.
+              setData(res.data);
+            });
         } else if (lsad === "County") {
           // getting feature attributes from geojson file to make api call.
           const state = feature.array_[0].values_.STATE;
@@ -139,17 +143,21 @@ function App() {
       <div>
         <h3>{name}</h3>
         <table>
-          <tr>
-            <th>Language</th>
-            <th>Estimate</th>
-          </tr>
-          {data.map((censusData, i) =>
-            i !== 0 ? (
-              <tr>
-                <td>{censusData[0]}</td> <td>{censusData[2]}</td>
-              </tr>
-            ) : null
-          )}
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Estimate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((censusData, i) =>
+              i !== 0 ? (
+                <tr key={i}>
+                  <td>{censusData[0]}</td> <td>{censusData[2]}</td>
+                </tr>
+              ) : null
+            )}
+          </tbody>
         </table>
       </div>
     );
@@ -183,7 +191,7 @@ function App() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <i class="fab fa-github"></i>Github Repo
+            <i className="fab fa-github"></i>Github Repo
           </a>
         </div>
       </div>
