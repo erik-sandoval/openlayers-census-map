@@ -1,21 +1,18 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef } from "react";
 import "./App.scss";
 import "ol/ol.css";
+import React, { useState, useEffect, useRef } from "react";
 import { Map, View, Overlay } from "ol";
 import TileLayer from "ol/layer/Tile";
 import { Group } from 'ol/layer'
 import { OSM } from "ol/source";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import GeoJSON from "ol/format/GeoJSON";
 import { Zoom, ZoomSlider } from 'ol/control';
 import LayerSwitcher from 'ol-layerswitcher'
-import { Style, Fill, Stroke } from 'ol/style';
-
+import { Style, Fill } from 'ol/style';
 import { Select } from 'ol/interaction';
-
 import axios from 'axios';
+
+import { usOutline, statesOutline, congressOutline, countiesOutline } from './layers'
+import "./App.scss";
 
 
 
@@ -32,7 +29,6 @@ function App() {
 
   useEffect(() => {
     const container = containerRef.current
-    const content = contentRef.current
     const closer = closerRef.current
 
     const selectClick = new Select({
@@ -67,76 +63,8 @@ function App() {
         }),
         new Group({
           title: 'Census Layers',
-          layers: [
-            new VectorLayer({
-              title: 'United States',
-              source: new VectorSource({
-                url: "./us_outline.json",
-                format: new GeoJSON()
-              }),
-              style: new Style({
-                stroke: new Stroke({
-                  color: 'black',
-                  width: 2
-                })
-              }),
-              zIndex: 10
-            }),
-            new VectorLayer({
-              title: "US States",
-              opacity: .7,
-              source: new VectorSource({
-                url: "./us_states_outline.json",
-                format: new GeoJSON(),
-              }),
-              style: new Style({
-                fill: new Fill({
-                  color: 'orange',
-                }),
-                stroke: new Stroke({
-                  color: '#B0FF92'
-                })
-              }),
-              maxZoom: 6
-            }),
-            new VectorLayer({
-              title: "US Congressional",
-              source: new VectorSource({
-                url: "./us_congressional.json",
-                format: new GeoJSON()
-              }),
-              minZoom: 6,
-              maxZoom: 8,
-              style: new Style({
-                fill: new Fill({
-                  color: "purple"
-                }),
-                stroke: new Stroke({
-                  color: 'orange',
-                  width: 3
-                })
-              }),
-              opacity: .7,
-            }),
-            new VectorLayer({
-              title: "US Counties",
-              source: new VectorSource({
-                url: "./us_counties.json",
-                format: new GeoJSON()
-              }),
-              style: new Style({
-                fill: new Fill({
-                  color: "red"
-                }),
-                stroke: new Stroke({
-                  color: 'white',
-                  width: 3
-                })
-              }),
-              opacity: .7,
-              minZoom: 8
-            })
-          ]
+          // imported from ./layers
+          layers: [usOutline, statesOutline, congressOutline, countiesOutline]
         })],
       view: new View({
         center: [-11159691.474093, 4701565.172793],
@@ -148,12 +76,11 @@ function App() {
       tipLabel: 'legend',
       groupSelectStyle: 'none',
     });
-
     map.addControl(layerSwitcher);
     map.addInteraction(selectClick)
 
     selectClick.on('select', function (evt) {
-      // content.innerText = ""
+      // I am using the coords to set the position of the overlay
       const pixels = evt.mapBrowserEvent.pixel
       const coords = map.getCoordinateFromPixel(pixels)
       const feature = selectClick.getFeatures()
@@ -180,7 +107,7 @@ function App() {
 
   }, [setData]);
 
-
+  // function that returns after census api call
   const DataLoop = () => {
     return <div>
       <h3>{name}</h3>
@@ -189,11 +116,7 @@ function App() {
           <th>Language</th>
           <th>Estimate</th>
         </tr>
-        {data.map((censusData, i) => (
-
-          i !== 0 ? <tr><td>{censusData[0]}</td> <td>{censusData[2]}</td></tr> : null
-
-        ))}
+        {data.map((censusData, i) => (i !== 0 ? <tr><td>{censusData[0]}</td> <td>{censusData[2]}</td></tr> : null))}
       </table>
     </div>
   }
@@ -203,6 +126,7 @@ function App() {
       </div>
       <div ref={containerRef} id="popup" className="ol-popup">
         <a href="#" ref={closerRef} id="popup-closer" className="ol-popup-closer"></a>
+        {/* conditional render if census returns data */}
         <div ref={contentRef} id="popup-content">{data ? <div><DataLoop /></div> : "Not enough data for this area to display"}</div>
       </div>
       <div className="contact-info">
