@@ -125,6 +125,12 @@ function App() {
       }
       // using the coords I get after getting the pixel location I set my overlay to pop up
       // where I click
+      if (evt.selected.length > 0) {
+        overlay.setPosition(coords);
+      } else {
+        overlay.setPosition(undefined);
+      }
+    });
   }, [setData]);
 
   // function that returns after census api call
