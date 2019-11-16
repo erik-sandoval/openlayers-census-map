@@ -1,4 +1,5 @@
 import "./App.scss";
+// OpenLayers Imports
 import "ol/ol.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Map, View, Overlay } from "ol";
@@ -28,6 +29,7 @@ function App() {
   const closerRef = useRef()
 
   useEffect(() => {
+
     const container = containerRef.current
     const closer = closerRef.current
 
@@ -47,6 +49,8 @@ function App() {
       }
     });
 
+    // function that's called on x in overlay.
+    // sets the overlays position to undefined thus removing overlay from map.
     closer.onclick = function () {
       overlay.setPosition(undefined);
       closer.blur();
@@ -72,6 +76,7 @@ function App() {
       })
     });
 
+    // third party library to make a layer legend
     const layerSwitcher = new LayerSwitcher({
       tipLabel: 'legend',
       groupSelectStyle: 'none',
@@ -79,29 +84,41 @@ function App() {
     map.addControl(layerSwitcher);
     map.addInteraction(selectClick)
 
+    // the select event listens for a feature select
     selectClick.on('select', function (evt) {
       // I am using the coords to set the position of the overlay
       const pixels = evt.mapBrowserEvent.pixel
       const coords = map.getCoordinateFromPixel(pixels)
       const feature = selectClick.getFeatures()
+      // check if the feature exists
       if (feature.array_.length > 0) {
         if (feature.array_[0].values_.NAME) {
+          // setting my name state
           setName(feature.array_[0].values_.NAME)
         }
+        // lsad shows if it is a congressional district or county
+        // since CD only have info for state district I decided to just use state api call
         const lsad = feature.array_[0].values_.LSAD
         if (lsad === "" || lsad === "CD") {
           const state = feature.array_[0].values_.STATE
+          // api call with dynamic state id
           axios.get(`${baseUrl}&for=state:${state}&key=${key}`).then(res => {
+            // setting response into state to access later on.
             setData(res.data)
           })
         } else if (lsad === "County") {
+          // getting feature attributes from geojson file to make api call.
           const state = feature.array_[0].values_.STATE
           const county = feature.array_[0].values_.COUNTY
+          // api call with dynamic state id and county id
           axios.get(`${baseUrl}&for=county:${county}&in=state:${state}&key=${key}`).then(res => {
+            // setting response into state to access later on.
             setData(res.data)
           })
         }
       }
+      // using the coords I get after getting the pixel location I set my overlay to pop up
+      // where I click
       overlay.setPosition(coords)
     })
 
