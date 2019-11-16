@@ -1153,11 +1153,6 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-9.0.1.tgz#c27b391d8457d1e893f1eddeaf5e5412d12ffbb5"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
 
-"@esri/react-arcgis@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@esri/react-arcgis/-/react-arcgis-5.0.0.tgz#db31443af35f75be1040672301e4539d3dc396b7"
-  integrity sha512-9roxH66PJ4P4ZUtFrU6bAEOyGf84HAXQtEK0xXv1np8hsA0H38MzeePqMerGwLLTli1Mf6kPIqnRMLnr7oPVZw==
-
 "@hapi/address@2.x.x":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.0.0.tgz#9f05469c88cb2fd3dcd624776b54ee95c312126a"
@@ -4199,11 +4194,6 @@ esrecurse@^4.1.0:
   integrity sha512-64RBB++fIOAXPw3P9cy89qfMlvZEXZkqqJkjqqXIvzP5ezRZjW+lPWjw35UX/3EhUPFYbg5ER4JYgDw4007/DQ==
   dependencies:
     estraverse "^4.1.0"
-
-esri-loader@^2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/esri-loader/-/esri-loader-2.12.0.tgz#da69bf50a2d04f0187db227d38aae10e41401e4c"
-  integrity sha512-4xqgN1xDoxI9KjUH85BX53wpXTPrPwVca+8e/8SgQ/8AxfsyZxHqeS7tfWBwATdFoJ+bUbyh51awmB9nMV0Kyg==
 
 estraverse@^4.0.0, estraverse@^4.1.0, estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.2.0"
