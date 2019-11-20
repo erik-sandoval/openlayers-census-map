@@ -34,9 +34,11 @@ function App() {
   const closerRef = useRef();
 
   useEffect(() => {
+    // setting references to React dom to avoid scope errors
     const container = containerRef.current;
     const closer = closerRef.current;
 
+    // select click object with a blue color fill
     const selectClick = new Select({
       style: new Style({
         fill: new Fill({
@@ -45,6 +47,7 @@ function App() {
       })
     });
 
+    // overlay that gets called on feature select
     const overlay = new Overlay({
       element: container,
       autoPan: true,
@@ -61,6 +64,7 @@ function App() {
       return false;
     };
 
+    // creating map with overlay and geojson layers in public folder
     const map = new Map({
       target: "map",
       overlays: [overlay],
@@ -75,6 +79,7 @@ function App() {
           layers: [usOutline, statesOutline, congressOutline, countiesOutline]
         })
       ],
+      // set center to Middle of US
       view: new View({
         center: [-11159691.474093, 4701565.172793],
         zoom: 5
@@ -86,7 +91,9 @@ function App() {
       tipLabel: "legend",
       groupSelectStyle: "none"
     });
+    // added layer switch
     map.addControl(layerSwitcher);
+    // added select click
     map.addInteraction(selectClick);
 
     // the select event listens for a feature select
